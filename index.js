@@ -41,6 +41,54 @@ const handleShow = (err, obj) => {
   }
 };
 
+const handleCompleteSettled = (err, str) => {
+  if (!err) {
+    const obj = JSON.parse(str);
+    if (!('items' in obj) || !('done' in obj)) {
+      console.log('Please do so by typing: node index.js init');
+    } else if (obj.items.length < 1) {
+      console.log('Please add an item by typing: node index.js add "item"');
+    } else {
+      console.log('Continue interacting with your to-do list by entering: node index.js (init|reset|show|add "item"|complete [itemNumber])');
+    }
+  }
+};
+
+const handleComplete = (err, obj) => {
+  let output = '';
+  // Exit if there was an error
+  if (err) {
+    console.error('Edit error', err);
+    return;
+  }
+
+  // Exit if key does not exist in DB
+  if (!('items' in obj) || !('done' in obj)) {
+    output = 'Your to-do database has not been initialized yet!';
+    console.error(output);
+    return;
+  }
+
+  if (obj.items.length < 1) {
+    output = 'You have no items in your to-do list, so you cannot mark any as complete.';
+    console.error(output);
+    return;
+  }
+
+  const { items } = obj;
+  const { done } = obj;
+  const idx = Number(process.argv[3]) - 1;
+  if (idx >= items.length) {
+    output = `Item ${idx + 1} does not yet exist on your to-do list!`;
+    console.error(output);
+    return;
+  }
+
+  done.push(items[idx]);
+  items.splice(idx, 1);
+  console.log(`I have marked item ${idx + 1}, "${done[done.length - 1]}" as complete.`);
+};
+
 if (INPUT === 'reset' || INPUT === 'init') {
   fileStorage.write(FILENAME, INIT_OBJ, handleReset);
 } else if (INPUT === 'add') {
@@ -51,6 +99,12 @@ if (INPUT === 'reset' || INPUT === 'init') {
   }
 } else if (INPUT === 'show') {
   fileStorage.read(FILENAME, handleShow);
+} else if (INPUT === 'complete') {
+  if (Number.isNaN(Number(process.argv[3])) || Number(process.argv[3]) < 1) {
+    console.error('Please enter a valid number on your to-do list to mark as complete.');
+  } else {
+    fileStorage.edit(FILENAME, handleComplete, handleCompleteSettled);
+  }
 } else {
-  console.error('Please enter a valid command: node index.js [init|reset|show|add "item"]');
+  console.error('Please enter a valid command: node index.js (init|reset|show|add "item"|complete [itemNumber])');
 }
