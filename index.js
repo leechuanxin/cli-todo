@@ -1,7 +1,7 @@
 import * as fileStorage from './jsonFileStorage.js';
 
 const INPUT = process.argv[2];
-const INIT_OBJ = { items: [] };
+const INIT_OBJ = { items: [], done: [] };
 const FILENAME = 'data.json';
 const ITEMS_KEY = 'items';
 
@@ -27,7 +27,7 @@ const handleShow = (err, obj) => {
     if (items.length === 0) {
       console.log('You have no items on your to-do list.');
     } else {
-      items.forEach((item) => console.log(`- ${item}`));
+      items.forEach((item, index) => console.log(`${index + 1}. ${item}`));
     }
   }
 };
