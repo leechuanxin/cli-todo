@@ -152,14 +152,18 @@ export function editOneElement(filename, key, index, payload, callback) {
         return;
       }
 
+      // remove or replace item
+      const editedItems = payload
+        ? jsonContentObj[key].splice(index, 1, payload)
+        : jsonContentObj[key].splice(index, 1);
+      const editedItemsStr = JSON.stringify(editedItems);
+
       if (payload) {
-        // Replace item from a particular index
-        jsonContentObj[key].splice(index, 1, payload);
+        // Show log regarding item and its replacement
+        callback(null, editedItemsStr, payload);
       } else {
-        // Remove item from a particular index
-        const removedItemsArr = jsonContentObj[key].splice(index, 1);
-        const removedItemsArrStr = JSON.stringify(removedItemsArr);
-        callback(null, removedItemsArrStr);
+        // Show log regarding removed item
+        callback(null, editedItemsStr);
       }
     },
     // Pass callback to edit to be called after edit completion

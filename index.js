@@ -89,11 +89,14 @@ const handleComplete = (err, obj) => {
   console.log(`I have marked item ${idx + 1}, "${done[done.length - 1]}" as complete.`);
 };
 
-const handleRemove = (err, str) => {
+const handleEditElement = (err, str, payload) => {
   if (!err) {
-    const removedItems = str ? JSON.parse(str) : null;
-    if (Array.isArray(removedItems)) {
-      console.log(`I have removed Item ${process.argv[3]}, "${removedItems[0]}"`);
+    const editedItems = str ? JSON.parse(str) : null;
+    if (Array.isArray(editedItems) && payload) {
+      console.log(`I have edited Item ${process.argv[3]}, "${editedItems[0]}" to be "${payload}".`);
+    }
+    else if (Array.isArray(editedItems)) {
+      console.log(`I have removed Item ${process.argv[3]}, "${editedItems[0]}".`);
     }
   }
 };
@@ -118,8 +121,23 @@ if (INPUT === 'reset' || INPUT === 'init') {
   if (Number.isNaN(Number(process.argv[3])) || Number(process.argv[3]) < 1) {
     console.error('Please enter a valid number on your to-do list to remove.');
   } else {
-    fileStorage.remove(FILENAME, ITEMS_KEY, Number(process.argv[3]) - 1, handleRemove);
+    fileStorage.remove(FILENAME, ITEMS_KEY, Number(process.argv[3]) - 1, handleEditElement);
+  }
+} else if (INPUT === 'edit') {
+  if (Number.isNaN(Number(process.argv[3])) || Number(process.argv[3]) < 1) {
+    console.error('Please enter a valid number on your to-do list to remove.');
+  } else if (!process.argv[4] || process.argv[4].trim() === '') {
+    console.error('Please enter the text to modify your item.');
+  } else {
+    fileStorage.editOneElement(
+      FILENAME,
+      ITEMS_KEY,
+      Number(process.argv[3]) - 1,
+      process.argv[4],
+      handleEditElement,
+    );
   }
 } else {
-  console.error('Please enter a valid command: node index.js (init|reset|show|add "item"|complete [itemNumber])');
+  console.error('Please enter a valid command:');
+  console.error('node index.js (init|reset|show|add "item"|complete [itemNumber]|remove [itemNumber]|edit [itemNumber] "newItem")');
 }
