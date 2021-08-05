@@ -143,6 +143,13 @@ export function remove(filename, key, index, callback) {
         return;
       }
 
+      // Exit if index is beyond size of array
+      if (index >= jsonContentObj.key.length || index < 0) {
+        console.error('Index does not exist');
+        // Call callback with relevant error message to let client handle
+        callback('Index does not exist');
+      }
+
       // Remove item from a particular index
       jsonContentObj[key].splice(index, 1);
     },
