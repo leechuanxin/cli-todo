@@ -89,6 +89,15 @@ const handleComplete = (err, obj) => {
   console.log(`I have marked item ${idx + 1}, "${done[done.length - 1]}" as complete.`);
 };
 
+const handleRemove = (err, str) => {
+  if (!err) {
+    const removedItems = str ? JSON.parse(str) : null;
+    if (Array.isArray(removedItems)) {
+      console.log(`I have removed Item ${process.argv[3]}, "${removedItems[0]}"`);
+    }
+  }
+};
+
 if (INPUT === 'reset' || INPUT === 'init') {
   fileStorage.write(FILENAME, INIT_OBJ, handleReset);
 } else if (INPUT === 'add') {
@@ -104,6 +113,12 @@ if (INPUT === 'reset' || INPUT === 'init') {
     console.error('Please enter a valid number on your to-do list to mark as complete.');
   } else {
     fileStorage.edit(FILENAME, handleComplete, handleCompleteSettled);
+  }
+} else if (INPUT === 'remove') {
+  if (Number.isNaN(Number(process.argv[3])) || Number(process.argv[3]) < 1) {
+    console.error('Please enter a valid number on your to-do list to remove.');
+  } else {
+    fileStorage.remove(FILENAME, ITEMS_KEY, Number(process.argv[3]) - 1, handleRemove);
   }
 } else {
   console.error('Please enter a valid command: node index.js (init|reset|show|add "item"|complete [itemNumber])');

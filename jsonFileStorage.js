@@ -145,10 +145,11 @@ export function editOneElement(filename, key, index, payload, callback) {
       }
 
       // Exit if index is beyond size of array
-      if (index >= jsonContentObj.key.length || index < 0) {
+      if (index >= jsonContentObj[key].length || index < 0) {
         console.error('Index does not exist');
         // Call callback with relevant error message to let client handle
         callback('Index does not exist');
+        return;
       }
 
       if (payload) {
@@ -156,7 +157,9 @@ export function editOneElement(filename, key, index, payload, callback) {
         jsonContentObj[key].splice(index, 1, payload);
       } else {
         // Remove item from a particular index
-        jsonContentObj[key].splice(index, 1);
+        const removedItemsArr = jsonContentObj[key].splice(index, 1);
+        const removedItemsArrStr = JSON.stringify(removedItemsArr);
+        callback(null, removedItemsArrStr);
       }
     },
     // Pass callback to edit to be called after edit completion
