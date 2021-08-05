@@ -20,6 +20,18 @@ const handleAdd = (err, str) => {
   }
 };
 
+const handleShow = (err, obj) => {
+  if (!err) {
+    const { items } = obj;
+
+    if (items.length === 0) {
+      console.log('You have no items on your to-do list.');
+    } else {
+      items.forEach((item) => console.log(`- ${item}`));
+    }
+  }
+};
+
 if (INPUT === 'reset' || INPUT === 'init') {
   fileStorage.write(FILENAME, INIT_OBJ, handleReset);
 } else if (INPUT === 'add') {
@@ -28,6 +40,8 @@ if (INPUT === 'reset' || INPUT === 'init') {
   } else {
     fileStorage.add(FILENAME, ITEMS_KEY, process.argv[3], handleAdd);
   }
+} else if (INPUT === 'show') {
+  fileStorage.read(FILENAME, handleShow);
 } else {
   console.error('Please enter a valid command: node index.js [init|reset|show|add "item"]');
 }
