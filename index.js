@@ -23,11 +23,20 @@ const handleAdd = (err, str) => {
 const handleShow = (err, obj) => {
   if (!err) {
     const { items } = obj;
+    const { done } = obj;
 
+    console.log('To-Do:');
     if (items.length === 0) {
-      console.log('You have no items on your to-do list.');
+      console.log('You have no items on your To-Do list.\n');
     } else {
       items.forEach((item, index) => console.log(`${index + 1}. ${item}`));
+      console.log('');
+    }
+    console.log('Done:');
+    if (done.length === 0) {
+      console.log('You have no items on your Done list.');
+    } else {
+      done.forEach((item, index) => console.log(`${index + 1}. ${item}`));
     }
   }
 };
