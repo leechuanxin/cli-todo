@@ -115,3 +115,38 @@ export function add(filename, key, input, callback) {
     callback,
   );
 }
+
+/**
+ * Remove an element from an array in JSON
+ * @param {string} filename
+ * @param {string} key - The name of the key of the array we wish to edit
+ * @param {number} index - The index of the array we wish to delete from
+ * @param {function} callback - The callback function to call after removing
+ * @returns undefined
+ */
+export function remove(filename, key, index, callback) {
+  edit(
+    filename,
+    (err, jsonContentObj) => {
+      // Exit if there was an error
+      if (err) {
+        console.error('Edit error', err);
+        callback(err);
+        return;
+      }
+
+      // Exit if key does not exist in DB
+      if (!(key in jsonContentObj)) {
+        console.error('Key does not exist');
+        // Call callback with relevant error message to let client handle
+        callback('Key does not exist');
+        return;
+      }
+
+      // Remove item from a particular index
+      jsonContentObj[key].splice(index, 1);
+    },
+    // Pass callback to edit to be called after edit completion
+    callback,
+  );
+}
