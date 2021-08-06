@@ -42,7 +42,7 @@ export const handleCompleteSettled = (err, str) => {
     } else if (obj.items.length < 1) {
       console.log('Please add an item by typing: node index.js add "item"');
     } else {
-      console.log('Continue interacting with your to-do list by entering: node index.js (init|reset|show|add "item"|complete [itemNumber])');
+      console.log('Continue interacting with your to-do list by entering: node index.js (init|reset|show|add "item"|complete [itemNumber]|remove [itemNumber]|edit [itemNumber] "newItem")');
     }
   }
 };

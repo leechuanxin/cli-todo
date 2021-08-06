@@ -5,6 +5,7 @@ const INPUT = process.argv[2];
 const INIT_OBJ = { items: [], done: [] };
 const FILENAME = 'data.json';
 const ITEMS_KEY = 'items';
+const COMMAND_HELP_TEXT = 'node index.js (init|reset|show|add "item"|complete [itemNumber]|remove [itemNumber]|edit [itemNumber] "newItem")';
 
 if (INPUT === 'reset' || INPUT === 'init') {
   fileStorage.write(FILENAME, INIT_OBJ, handlers.handleReset);
@@ -48,6 +49,5 @@ if (INPUT === 'reset' || INPUT === 'init') {
     );
   }
 } else {
-  console.error('Please enter a valid command:');
-  console.error('node index.js (init|reset|show|add "item"|complete [itemNumber]|remove [itemNumber]|edit [itemNumber] "newItem")');
+  console.error(`Please enter a valid command: ${COMMAND_HELP_TEXT}`);
 }
